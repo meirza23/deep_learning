@@ -1,27 +1,31 @@
-# 🧠 Crypto AI: Hibrit Derin Öğrenme ile Fiyat Analizi
+# 🚀 Crypto AI: GRU Tabanlı Fiyat Değişim Analizi
 
-Bu proje, **CNN (Evrişimli Sinir Ağları)** ve **LSTM (Uzun Kısa Süreli Bellek)** mimarilerini birleştiren hibrit bir yapay zeka modeli kullanarak Bitcoin (BTC) ve Solana (SOL) fiyat hareketlerini tahmin etmeyi amaçlar.
+Bu proje, **GRU (Gated Recurrent Unit)** derin öğrenme mimarisini kullanarak Bitcoin (BTC) ve Solana (SOL) için kısa vadeli fiyat hareketlerini tahmin etmeyi amaçlar.
 
-Proje, **Yahoo Finance** üzerinden canlı veri çeker, **RSI ve MACD** gibi teknik indikatörlerle veriyi zenginleştirir ve **Log-Return (Yüzdesel Getiri)** öğrenme stratejisi ile geleceği tahmin eder.
+Sistem, klasik fiyat tahmini yerine **"Delta Learning" (Fark Öğrenme)** yöntemini kullanır. Model, bir sonraki gün fiyatın kaç dolar olacağını değil, bugüne göre **ne kadar artacağını veya azalacağını** (değişim miktarını) öğrenir.
 
-## 🚀 Proje Özellikleri
+## 🌟 Proje Özellikleri
 
-* **🧬 Hibrit Mimari (CNN + LSTM):** CNN ile fiyat grafiğindeki desenleri yakalar, LSTM ile zamansal trendleri analiz eder.
-* **📊 Çoklu Özellik (Multi-Feature):** Model sadece fiyata değil, **RSI (Momentum)** ve **MACD (Trend)** verilerine de bakarak karar verir.
-* **🎯 Delta Learning:** Model fiyatın kendisini değil, **değişim oranını (Log-Return)** öğrenir. Bu sayede "lagging" (gecikme) sorunu çözülmüştür.
-* **🔒 Kararlı Sonuçlar:** `Seed` sabitleme yöntemi ile her eğitimde tutarlı ve tekrarlanabilir sonuçlar üretir.
-* **🌐 Web Arayüzü:** Gradio tabanlı modern bir analiz paneli sunar.
+* **⚡ Verimli Mimari (GRU):** LSTM'e göre daha hızlı eğitim sağlayan ve daha az bellek tüketen, 2 katmanlı ve 256 hücreli GRU yapısı kullanılmıştır.
+* **📉 Delta (Fark) Tahmini:** Model, `Close(t) - Close(t-1)` formülüyle hesaplanan değişimi analiz eder. Bu yöntem veriyi durağanlaştırır ve modelin trendleri daha iyi yakalamasını sağlar.
+* **🔄 Kayan Pencere (Sliding Window):** Geçmiş 30 günün kapanış verilerine bakarak 31. günün hareketini tahmin eder.
+* **🌐 İnteraktif Web Arayüzü:** Gradio ile oluşturulmuş, canlı veri çeken ve tahminleri görselleştiren modern bir analiz paneli sunar.
+* **📊 Görsel Raporlama:** Eğitim sonrası kayıp (loss) grafikleri ve fiyat karşılaştırma grafikleri otomatik olarak üretilir.
 
 ## 📂 Proje Yapısı
 
-* **`model.py`**: Hibrit (CNN+LSTM) Yapay Sinir Ağı mimarisinin tanımlandığı dosya.
-* **`train.py`**: Veri çekme, indikatör hesaplama (RSI/MACD), model eğitimi ve başarı grafiklerinin oluşturulduğu modül.
-* **`serve.py`**: Eğitilen modeli kullanarak canlı analiz yapan kullanıcı dostu web arayüzü.
-* **`requirements.txt`**: Projenin çalışması için gerekli kütüphaneler.
+* **`model.py`**: PyTorch kullanılarak oluşturulan **GRU** ağ mimarisini içerir (Input Size: 1, Hidden Size: 256, Layers: 2).
+* **`train.py`**:
+    * Yahoo Finance API (`yfinance`) üzerinden veri çeker.
+    * Veriyi işler ve normalize eder (MinMaxScaler).
+    * Modeli eğitir (`MSELoss` ve `Adam` optimizasyonu ile).
+    * Sonuçları `.pth` (model ağırlıkları) ve `.pkl` (ölçekleyiciler) dosyalarına kaydeder.
+* **`serve.py`**: Eğitilmiş modeli yükler ve son kullanıcı için canlı analiz yapan bir web sunucusu başlatır.
+* **`requirements.txt`**: Projenin çalışması için gerekli kütüphane listesi.
 
-## 🛠️ Kurulum
+## 🛠️ Kurulum ve Çalıştırma
 
-Projeyi bilgisayarınızda çalıştırmak için aşağıdaki adımları izleyin:
+Projeyi bilgisayarınızda çalıştırmak için aşağıdaki adımları takip edin:
 
 1.  **Gerekli Kütüphaneleri Yükleyin:**
     ```bash
